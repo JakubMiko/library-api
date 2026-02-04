@@ -8,11 +8,11 @@ module Borrowings
     end
 
     rule(:book_id) do
-      book = Book.find_by(id: value)
+      book = Book.active.find_by(id: value)
 
       if book.nil?
         key.failure("book not found")
-      elsif Borrowing.exists?(book_id: book.id, returned_at: nil)
+      elsif book.current_borrowing.present?
         key.failure("book is already borrowed")
       end
     end
