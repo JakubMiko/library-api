@@ -10,17 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_03_230449) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_04_192709) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "books", force: :cascade do |t|
     t.string "author", null: false
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.string "serial_number", limit: 6, null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["author"], name: "index_books_on_author"
+    t.index ["deleted_at"], name: "index_books_on_deleted_at"
     t.index ["serial_number"], name: "index_books_on_serial_number", unique: true
     t.index ["title"], name: "index_books_on_title"
   end
