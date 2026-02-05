@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: library_api
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: library_api_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U library_api -d library_api_development"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: >
+      bash -c "rm -f tmp/pids/server.pid &&
+               ./bin/rails db:prepare &&
+               ./bin/rails db:seed &&
+               ./bin/rails server -b 0.0.0.0"
+    volumes:
+      - .:/rails
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/up || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    environment:
+      DATABASE_URL: postgres://library_api:password@db:5432/library_api_development
+      RAILS_ENV: development
+
+  worker:
+    build: .
+    command: ./bin/jobs
+    volumes:
+      - .:/rails
+    depends_on:
+      web:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://library_api:password@db:5432/library_api_development
+      RAILS_ENV: development
+
+volumes:
+  postgres_data:

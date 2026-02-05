@@ -4,8 +4,10 @@ class BookSerializer < ApplicationSerializer
   attributes :serial_number, :title, :author
 
   attribute :available do |book|
-    book.current_borrowing.nil?
+    if book.borrowings.loaded?
+      book.borrowings.none? { |b| b.returned_at.nil? }
+    else
+      book.current_borrowing.nil?
+    end
   end
-
-  has_many :borrowings, serializer: BorrowingSerializer
 end

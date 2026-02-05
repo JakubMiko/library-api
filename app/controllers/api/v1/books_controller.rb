@@ -12,7 +12,7 @@ module Api
       def show
         book = Book.active.includes(borrowings: :reader).find(params[:id])
 
-        render json: BookSerializer.new(book, include: [ :borrowings, :"borrowings.reader" ]).serializable_hash
+        render json: BookDetailSerializer.new(book, include: [ :borrowings, :"borrowings.reader" ]).serializable_hash
       end
 
       def create
