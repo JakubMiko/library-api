@@ -1,0 +1,112 @@
+---
+openapi: 3.0.1
+info:
+  title: Library API
+  version: v1
+  description: API for managing library books and borrowings
+paths:
+  "/api/v1/books":
+    get:
+      summary: List all books
+      tags:
+      - Books
+      responses:
+        '200':
+          description: books found
+    post:
+      summary: Create a book
+      tags:
+      - Books
+      parameters: []
+      responses:
+        '201':
+          description: book created
+        '422':
+          description: validation failed
+        '503':
+          description: number pool exhausted
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+              required:
+              - title
+              - author
+  "/api/v1/books/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Show a book with borrowing history
+      tags:
+      - Books
+      responses:
+        '200':
+          description: book found
+        '404':
+          description: book not found
+    delete:
+      summary: Delete a book
+      tags:
+      - Books
+      responses:
+        '204':
+          description: book deleted
+        '404':
+          description: book not found
+        '422':
+          description: cannot delete borrowed book
+  "/api/v1/borrowings":
+    post:
+      summary: Borrow a book
+      tags:
+      - Borrowings
+      parameters: []
+      responses:
+        '201':
+          description: book borrowed
+        '422':
+          description: reader not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                book_id:
+                  type: integer
+                reader_card_number:
+                  type: string
+              required:
+              - book_id
+              - reader_card_number
+  "/api/v1/borrowings/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Return a book
+      tags:
+      - Borrowings
+      responses:
+        '200':
+          description: book returned
+        '422':
+          description: book already returned
+        '404':
+          description: borrowing not found
+servers:
+- url: http://localhost:3000
+  description: Development server

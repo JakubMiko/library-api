@@ -41,6 +41,10 @@ gem "dry-validation"
 # JSON:API serializer [https://github.com/jsonapi-serializer/jsonapi-serializer]
 gem "jsonapi-serializer"
 
+# OpenAPI/Swagger documentation [https://github.com/rswag/rswag]
+gem "rswag-api"
+gem "rswag-ui"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -60,4 +64,7 @@ group :development, :test do
   gem "factory_bot_rails"
   # Fake data generator [https://github.com/faker-ruby/faker]
   gem "faker"
+
+  # OpenAPI/Swagger spec generation [https://github.com/rswag/rswag]
+  gem "rswag-specs"
 end
