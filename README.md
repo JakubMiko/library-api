@@ -18,6 +18,7 @@ API for library management - tracking books and borrowings.
 - **5 borrowings limit** per reader - business rule in contract
 - **Single database** for app and Solid Queue - simpler for dev/small deployments
 - **Services only for complex logic** - simple CRUD actions stay in controllers, service objects used only for borrowing/returning (scheduling jobs, multiple validations)
+- **Mailer preview** for email verification - no real email sending, preview available at `/rails/mailers/borrowing_mailer`
 
 ## Local Setup
 
@@ -56,6 +57,15 @@ Testing convention:
 - **Request specs** (rswag) - test main API paths and generate Swagger documentation
 - **Service specs** - detailed business logic tests, also indirectly cover validators
 - **Job specs** - test background job behavior
+
+## Limitations & Future Improvements
+
+**6-digit serial numbers** - as per requirements, books and readers use 6-digit identifiers. This limits the system to ~1M records per type. The edge case is handled (returns 503 when exhausted) to make debugging easier if it ever occurs.
+
+For production scaling, possible improvements:
+- Extend format with letters (e.g., `A12345`) for more combinations
+- Recycle numbers when books/readers are permanently deleted (if history preservation is not required)
+- Use encoded IDs (sqids/hashids) for unlimited scalability
 
 ## Endpoints
 

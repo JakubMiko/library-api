@@ -7,6 +7,5 @@ class BorrowingSerializer < ApplicationSerializer
     borrowing.book.title
   end
 
-  belongs_to :book, serializer: BookSerializer
   belongs_to :reader, serializer: ReaderSerializer
 end
